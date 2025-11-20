@@ -69,18 +69,17 @@ class Gusano extends Thread{
 	}
 
 	private boolean gusanicida(int row, int col) {
-    if (jardin[row][col] == 'R') {
-        terminado = true;
-        System.out.println("El gusano murió por una raíz en (" + row + ", " + col + ")");
+	    if (jardin[row][col] == 'R') {
+	        terminado = true;//RIP Gusano :(
+	        System.out.println("El gusano murió por una raíz en (" + row + ", " + col + ")");
 
-        synchronized (jardin) {
-            jardin.notifyAll(); // Despierta al monitor
-        }
-        return true;
-    }
-
-    return false;
-}
+	        synchronized (jardin) {
+	            jardin.notifyAll();
+	        }
+	        return true;
+	    }
+	    return false;
+	}
 
 	
 
