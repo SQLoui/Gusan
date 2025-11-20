@@ -4,6 +4,7 @@ tipo[renglo][columna]
 
 ej:
 mapa = char[7][6]*/
+import java.util.Scanner;
 
 class Gusano extends Thread{
 
@@ -121,6 +122,7 @@ class MonitorM extends Thread{
     }
 
     private void MapaCoords() {
+    public void MapaCoords() {
     	System.out.print("\033[H\033[2J");
         System.out.flush();
 	    System.out.print("    ");
@@ -137,6 +139,15 @@ class MonitorM extends Thread{
 	        System.out.println();
 	    }
 	}
+
+	public void plantarRaiz(int row, int col){
+		if(row >= 0 && row < r && col >= 0 && col < c){
+	        jardin[row][col] = 'R';
+	    }else{
+	        System.out.println("Coordenadas fuera del jardin.");
+	    }
+	}
+
 
 	@Override
 	public void run() {
@@ -158,12 +169,28 @@ class MonitorM extends Thread{
 
 public class Arbis{
 	public static void main(String[] args){
+	Scanner sc = new Scanner(System.in);
 	char[][] mapa = new char[10][10];
 
 	Gusano gus = new Gusano(mapa);
 	MonitorM mon = new MonitorM(mapa,gus);
 
 	mon.llenarMapa();
+
+	System.out.println("¿Cuántas raíces deseas plantar?");
+    int raices = sc.nextInt();
+
+    for (int k = 0; k < raices; k++) {
+    	mon.MapaCoords();
+        System.out.println("\nRaíz #" + (k+1));
+        System.out.print("Fila: ");
+        int f = sc.nextInt();
+        System.out.print("Columna: ");
+        int c = sc.nextInt();
+        mon.plantarRaiz(f, c);
+        mon.MapaCoords();
+    }
+	
 	gus.start();
 	mon.start();
 
