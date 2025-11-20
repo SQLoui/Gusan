@@ -26,16 +26,37 @@ class Gusano extends Thread{
 		r=jardin.length;
 	}
 
-	public void caminaY(int y){//Camina renglon
+	/*public void caminaY(int y){//Camina renglon
 		for(int i=0;i<c;i++){
 			jardin[i][y]='W';
+			
 		}
 	}
 	public void caminaX(int x){//Camina columna
 		for(int i=0;i<r;i++){
-			jardin[x][i]='W';
-		}
+		jardin[x][i]='W';
+	}*/
+	public void caminaY(int col) {
+		for(int fila = 0; fila < r; fila++) {
+	    	if (gusanicida(fila, col)) {
+	            jardin[fila][col] = 'X';
+	            return;
+	        }
+	        jardin[fila][col] = 'W';
+    	}
 	}
+	public void caminaX(int fila) {
+	    if (fila < 0 || fila >= r) return;
+	    for (int col = 0; col < c; col++) {
+	        if (gusanicida(fila, col)) {
+	            jardin[fila][col] = 'X';
+	            return;
+	        }
+	        jardin[fila][col] = 'W';
+	    }
+	}
+
+
 	public void comerX(int x, int traga){
 		for(int i=0;i<traga;i++){
 			jardin[x][i]='C';
@@ -46,6 +67,21 @@ class Gusano extends Thread{
 			jardin[i][y]='C';
 		}
 	}
+
+	private boolean gusanicida(int row, int col) {
+    if (jardin[row][col] == 'R') {
+        terminado = true;
+        System.out.println("El gusano murió por una raíz en (" + row + ", " + col + ")");
+
+        synchronized (jardin) {
+            jardin.notifyAll(); // Despierta al monitor
+        }
+        return true;
+    }
+
+    return false;
+}
+
 	
 
 	@Override
@@ -60,11 +96,12 @@ class Gusano extends Thread{
 				sleep(400);
 				ini++;	
 
-				synchronized(jardin){
+				/*synchronized(jardin){
 					comerX(ini,2);
-				}
+				}*/
 
 				vida--;
+				
 
 			}catch(InterruptedException e){
 				System.out.println("Interrupción");
@@ -155,7 +192,7 @@ class MonitorM extends Thread{
                 //imprimirMapa();
                 MapaCoords();
                 try {
-                    jardin.wait(500);
+                    jardin.wait(550);
                 } catch (InterruptedException e) {
                     return;
                 }
@@ -189,7 +226,10 @@ public class Arbis{
         mon.plantarRaiz(f, c);
         mon.MapaCoords();
     }
-	
+
+	System.out.println("\nENTER para iniciar al gusano…");
+	sc.nextLine();
+	sc.nextLine();
 	gus.start();
 	mon.start();
 
