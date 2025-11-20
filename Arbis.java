@@ -120,11 +120,30 @@ class MonitorM extends Thread{
         System.out.println();
     }
 
+    private void MapaCoords() {
+    	System.out.print("\033[H\033[2J");
+        System.out.flush();
+	    System.out.print("    ");
+	    for (int j = 0; j < c; j++) {
+	        System.out.printf("%2d ", j);
+	    }
+	    System.out.println("\n     ---------------------------   ");
+
+	    for (int i = 0; i < r; i++) {
+	        System.out.printf("%2d |", i);
+	        for (int j = 0; j < c; j++) {
+	            System.out.print(" " + jardin[i][j] + " ");
+	        }
+	        System.out.println();
+	    }
+	}
+
 	@Override
 	public void run() {
 		synchronized (jardin) {
             while (!gusano.Terminado()) {
-                imprimirMapa();
+                //imprimirMapa();
+                MapaCoords();
                 try {
                     jardin.wait(500);
                 } catch (InterruptedException e) {
