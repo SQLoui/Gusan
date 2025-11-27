@@ -1,6 +1,6 @@
 /*Arreglos bidimensionales
 
-tipo[renglo][columna]
+tipo[renglon][columna]
 
 ej:
 mapa = char[7][6]*/
@@ -85,39 +85,35 @@ class Gusano extends Thread{
 
 	@Override
 	public void run(){
-		int vida=10;
-		int ini =0;
-		while(vida>0){
-			try{
-				synchronized(jardin){
-					caminaX(ini);
-				}
-				sleep(400);
-				ini++;	
+	    int vida = 10;
+	    int ini = 0;
 
-				/*synchronized(jardin){
-					comerX(ini,2);
-				}*/
+	    while(vida > 0 && !terminado){
+	        try{
+	            synchronized(jardin){
+	                caminaX(ini);
+	                if (terminado) break;
+	            }
 
-				vida--;
-				
+	            sleep(400);
+	            ini++;
+	            vida--;
 
-			}catch(InterruptedException e){
-				System.out.println("Interrupción");
-			}catch(ArrayIndexOutOfBoundsException e){
-				ini=0;
-			}
+	        } catch(InterruptedException e){
+	            System.out.println("Interrupción");
+	        } catch(ArrayIndexOutOfBoundsException e){
+	            ini = 0;
+	        }
+	    }
 
-		}
+	    synchronized(jardin) {
+	        terminado = true;
+	        jardin.notifyAll();
+	    }
 
-		synchronized (jardin) {
-        	terminado = true;
-        	jardin.notifyAll();
-        }
-
-		System.out.println("El gusano ha terminado su recorrido.");
-
+	    System.out.println("El gusano ha terminado su recorrido.");
 	}
+
 
 }
 
